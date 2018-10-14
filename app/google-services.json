@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "120472552359",
+    "firebase_url": "https://testapplicationgcm.firebaseio.com",
+    "project_id": "testapplicationgcm",
+    "storage_bucket": "testapplicationgcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120472552359:android:9dfcb783bc31aa83",
+        "android_client_info": {
+          "package_name": "ir.ayantech.finesdetail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120472552359-ss0uurgm6r3tmina2kqqm4agq88iaib3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJdUuN-GVMmgb9ctEbPEyAx4Cqg4nnM_s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
