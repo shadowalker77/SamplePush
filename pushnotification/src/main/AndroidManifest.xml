@@ -5,14 +5,14 @@
 
     <application>
         <activity
-            android:name=".activity.CustomizableDialogActivity"
+            android:name="ir.ayantech.pushnotification.activity.CustomizableDialogActivity"
             android:theme="@style/DialogActivity" />
         <activity
-            android:name=".activity.DownloadFileDialog"
+            android:name="ir.ayantech.pushnotification.activity.DownloadFileDialog"
             android:theme="@style/DialogActivity" />
         <activity android:name=".activity.IncomeMessageActivity" />
 
-        <service android:name=".core.MyFirebaseMessagingService">
+        <service android:name="ir.ayantech.pushnotification.core.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
