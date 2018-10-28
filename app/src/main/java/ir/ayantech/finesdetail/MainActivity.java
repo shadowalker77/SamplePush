@@ -18,6 +18,7 @@ import ir.ayantech.pushnotification.activity.CustomizableDialogActivity;
 import ir.ayantech.pushnotification.core.Message;
 import ir.ayantech.pushnotification.core.NotificationToShow;
 import ir.ayantech.pushnotification.core.PushNotificationCore;
+import ir.ayantech.pushnotification.networking.model.ExtraInfo;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,9 +27,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         PushNotificationCore.start(this);
         setContentView(R.layout.activity_main);
-        Message message = new Message<>(new ShareAction("https://www.google.com"),
-                "Share",
-                new NotificationToShow("title", "body", null));
-        Log.d("json", new Gson().toJson(message));
+        PushNotificationCore.reportExtraInfo(this, new AppExtraInfo("s"));
+    }
+
+    public class AppExtraInfo extends ExtraInfo {
+        private String HookToken;
+        private String HookApplicationName = "TrafficFines";
+
+        public AppExtraInfo(String hookToken) {
+            HookToken = hookToken;
+        }
     }
 }

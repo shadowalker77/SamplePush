@@ -30,6 +30,7 @@ public class CustomizableDialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_customizable);
+        setFinishOnTouchOutside(false);
         WholeView wholeView = deserializeIntent();
         if (wholeView == null) {
             finish();

@@ -28,12 +28,18 @@ public class TargetedClassAction extends PushNotificationAction implements Seria
         }
     }
 
-    public static <T> T getCustomClass(Model model) {
+    public static Object getCustomClass(Model model) {
         try {
-            return (T) new Gson().fromJson(model.injectValuesJson, Class.forName(model.getClassName()).getClass());
+            return new Gson().fromJson(model.injectValuesJson, Class.forName(model.getClassName()).getClass());
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    public static Object handleFromActivity(Intent intent) {
+        if (intent.getSerializableExtra(TARGETED_CLASS_PROPERTIES_TAG) == null)
+            return null;
+        return getCustomClass((Model) intent.getSerializableExtra(TARGETED_CLASS_PROPERTIES_TAG));
     }
 
     public static class Model extends ActionModel {

@@ -53,16 +53,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d("newToken", s);
         PreferencesManager.saveToSharedPreferences(SERVER_NOTIFIED_TOKEN, false);
         PNAPIs.initialize();
-        newDevice(getApplicationContext(), s);
+        if (!s.isEmpty())
+            newDevice(getApplicationContext(), s);
     }
-
 
     public static void newDevice(Context context, String token) {
         storeRegIdInPref(token);
-        sendRegistrationToServer(context, token, new ExtraInfo());
+        ExtraInfo extraInfo = new ExtraInfo();
+        try {
+            extraInfo = PushNotificationUser.getPushNotificationExtraInfo();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        sendRegistrationToServer(context, token, extraInfo);
     }
 
     public static <T extends ExtraInfo> void sendRegistrationToServer(Context context, final String token, T extraInfo) {
+        if (token.isEmpty())
+            return;
         PNAPIs.reportNewDevice.callApi(getResponseStatus(),
                 new ReportNewDevice.ReportNewDeviceInputModel(context.getResources().getString(R.string.applicationName),
                         context.getResources().getString(R.string.applicationType),
@@ -92,6 +100,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public static void reportUserMobileNumber(String mobileNumber) {
+        if (PushNotificationUser.getPushNotificationToken().isEmpty())
+            return;
         PNAPIs.reportDeviceMobileNumber.callApi(new PNResponseStatus() {
             @Override
             public void onSuccess(PNAPI PNAPI, String message, @Nullable PNResponseModel responseModel) {

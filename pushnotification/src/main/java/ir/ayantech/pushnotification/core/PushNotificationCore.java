@@ -3,7 +3,6 @@ package ir.ayantech.pushnotification.core;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
@@ -115,11 +114,14 @@ public class PushNotificationCore {
     }
 
     public static <T extends ExtraInfo> void reportExtraInfo(Context context, T extraInfo) {
-        MyFirebaseMessagingService.sendRegistrationToServer(context, PushNotificationUser.getPushNotificationToken(), extraInfo);
+        PushNotificationUser.setPushNotificationExtraInfo(extraInfo);
+        if (isServerNotifiedToken())
+            MyFirebaseMessagingService.sendRegistrationToServer(context, PushNotificationUser.getPushNotificationToken(), extraInfo);
     }
 
     public static void reportUserMobileNumber(String mobileNumber) {
         PushNotificationUser.setUserMobile(mobileNumber);
+        PreferencesManager.saveToSharedPreferences(SERVER_NOTIFIED_MOBILE, false);
         MyFirebaseMessagingService.reportUserMobileNumber(mobileNumber);
     }
 }
