@@ -22,6 +22,8 @@ import java.util.List;
 import ir.ayantech.pushnotification.R;
 import ir.ayantech.pushnotification.action.CustomizableDialogAction;
 import ir.ayantech.pushnotification.action.PushNotificationAction;
+import ir.ayantech.pushnotification.core.Message;
+import ir.ayantech.pushnotification.core.PushNotificationCore;
 import ir.ayantech.pushnotification.helper.ImageHelper;
 
 public class CustomizableDialogActivity extends AppCompatActivity {
@@ -154,28 +156,28 @@ public class CustomizableDialogActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     activity.finish();
-                    if (button.getAction() != null)
-                        button.getAction().doAction();
+                    if (button.getMessage() != null)
+                        PushNotificationCore.receivedMessageLogic(activity, button.getMessage());
                 }
             });
         }
     }
 
-    public static class Button<T extends PushNotificationAction> implements Serializable {
+    public static class Button<T extends Message> implements Serializable {
         private String text;
-        private T action;
+        private T message;
 
-        public Button(String text, T action) {
+        public Button(String text, T message) {
             this.text = text;
-            this.action = action;
+            this.message = message;
         }
 
         public String getText() {
             return text;
         }
 
-        public T getAction() {
-            return action;
+        public T getMessage() {
+            return message;
         }
     }
 }
