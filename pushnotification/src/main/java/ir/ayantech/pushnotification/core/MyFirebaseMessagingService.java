@@ -124,11 +124,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             @Override
             public void onSuccess(PNAPI PNAPI, String message, @Nullable PNResponseModel responseModel) {
                 PreferencesManager.saveToSharedPreferences(SERVER_NOTIFIED_TOKEN, true);
+                Log.d("AyanPush", "FCM token successfully reported to the server.");
             }
 
             @Override
             public void onFail(PNAPI PNAPI, String error, boolean canTry) {
-                Log.e("Error", error);
+//                Log.e("Error", error);
+                Log.e("AyanPush", "FCM token successfully reported to the server. Did you correctly set \"properties.xml\" file?");
             }
         };
     }

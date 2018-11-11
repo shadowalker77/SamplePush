@@ -40,7 +40,7 @@ public class NotificationUtils {
 
 
         // notification icon
-        final int icon = R.drawable.ic_notif;
+        final int icon = R.drawable.pushIcon;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         final PendingIntent resultPendingIntent =
@@ -98,7 +98,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(inboxStyle)
 //                .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.ic_notif)
+                .setSmallIcon(R.drawable.pushIcon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), icon))
                 .setContentText(message)
                 .build();
@@ -132,7 +132,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(bigPictureStyle)
 //                .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.ic_notif)
+                .setSmallIcon(R.drawable.pushIcon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), icon))
                 .setContentText(message)
                 .build();

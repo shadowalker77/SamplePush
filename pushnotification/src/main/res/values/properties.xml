@@ -3,4 +3,5 @@
     <string name="applicationName">applicationName</string>
     <string name="applicationType">applicationType</string>
     <string name="businessName">businessName</string>
+    <drawable name="pushIcon">@drawable/ic_notif</drawable>
 </resources>
