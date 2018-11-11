@@ -173,11 +173,11 @@ public class CustomizableDialogActivity extends AppCompatActivity {
         }
     }
 
-    public static class Button<T extends Message> implements Serializable {
+    public static class Button implements Serializable {
         private String text;
-        private T message;
+        private Message message;
 
-        public Button(String text, T message) {
+        public Button(String text, Message message) {
             this.text = text;
             this.message = message;
         }
@@ -186,7 +186,7 @@ public class CustomizableDialogActivity extends AppCompatActivity {
             return text;
         }
 
-        public T getMessage() {
+        public Message getMessage() {
             return message;
         }
     }
