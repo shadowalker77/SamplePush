@@ -56,7 +56,7 @@ public class Message<T extends PushNotificationAction> implements Serializable {
     public static class MessageDeserializer implements JsonDeserializer<Message> {
         @Override
         public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Message message = new GsonBuilder().create().fromJson(json.toString(), new TypeToken<Message<CustomAction>>() {
+            Message message = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create().fromJson(json.toString(), new TypeToken<Message<CustomAction>>() {
             }.getType());
             if (message.getAction() != null) {
                 Type actionType = null;
@@ -87,7 +87,7 @@ public class Message<T extends PushNotificationAction> implements Serializable {
                         break;
                 }
                 if (actionType != null)
-                    message = new GsonBuilder().create().fromJson(json.toString(), actionType);
+                    message = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create().fromJson(json.toString(), actionType);
             }
             return message;
         }
