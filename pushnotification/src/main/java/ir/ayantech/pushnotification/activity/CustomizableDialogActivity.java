@@ -69,6 +69,7 @@ public class CustomizableDialogActivity extends AppCompatActivity {
                 model.getImageUrl(),
                 model.getButtons());
         Intent intent = new Intent(context, CustomizableDialogActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("wholeView", wholeView);
         context.startActivity(intent);
     }

@@ -114,6 +114,7 @@ public class DownloadFileDialog extends AppCompatActivity {
         intent.putExtra(MESSAGE_TAG, model.getMessage());
         intent.putExtra(LINK_TAG, model.getFileUrl());
         intent.putExtra(CANCELLABLE_TAG, model.isCancellable());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 }
