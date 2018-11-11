@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 
@@ -41,7 +43,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void handleDataMessage(Map<String, String> arrayMap) {
         try {
             String body = arrayMap.get("message");
-            PushNotificationCore.receivedMessageLogic(getApplicationContext(), PushNotificationCore.convertStringToMessage(body));
+            Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new Message.MessageDeserializer()).create();
+            PushNotificationCore.receivedMessageLogic(getApplicationContext(), gson.fromJson(body, Message.class));
         } catch (Exception e) {
             e.printStackTrace();
         }

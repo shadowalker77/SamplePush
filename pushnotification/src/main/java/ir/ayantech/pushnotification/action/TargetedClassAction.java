@@ -22,6 +22,7 @@ public class TargetedClassAction extends PushNotificationAction implements Seria
             Intent intent = new Intent(getContext(), Class.forName(model.getActivityClass()));
             if (model.getClassName() != null)
                 intent.putExtra(TARGETED_CLASS_PROPERTIES_TAG, model);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(intent);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

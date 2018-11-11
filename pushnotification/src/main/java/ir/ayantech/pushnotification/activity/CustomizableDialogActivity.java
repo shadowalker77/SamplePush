@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +21,6 @@ import java.util.List;
 
 import ir.ayantech.pushnotification.R;
 import ir.ayantech.pushnotification.action.CustomizableDialogAction;
-import ir.ayantech.pushnotification.action.PushNotificationAction;
 import ir.ayantech.pushnotification.core.Message;
 import ir.ayantech.pushnotification.core.PushNotificationCore;
 import ir.ayantech.pushnotification.helper.ImageHelper;
@@ -33,7 +32,7 @@ public class CustomizableDialogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_customizable);
         setFinishOnTouchOutside(false);
-        WholeView wholeView = deserializeIntent();
+        final WholeView wholeView = deserializeIntent();
         if (wholeView == null) {
             finish();
             return;
@@ -51,7 +50,12 @@ public class CustomizableDialogActivity extends AppCompatActivity {
             return;
         if (wholeView.imageUrl.isEmpty())
             return;
-        ((ImageView) findViewById(R.id.bannerIv)).setImageBitmap(ImageHelper.getBitmapFromURL(wholeView.imageUrl));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((ImageView) findViewById(R.id.bannerIv)).setImageBitmap(ImageHelper.getBitmapFromURL(wholeView.imageUrl));
+            }
+        }, 100);
     }
 
     private WholeView deserializeIntent() {
@@ -152,7 +156,7 @@ public class CustomizableDialogActivity extends AppCompatActivity {
             this.setText(button.getText());
             if (this.getLayoutParams() == null)
                 this.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            ((LinearLayout.LayoutParams) this.getLayoutParams()).rightMargin = 20;
+            ((LinearLayout.LayoutParams) this.getLayoutParams()).rightMargin = px2dp(20);
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -161,6 +165,11 @@ public class CustomizableDialogActivity extends AppCompatActivity {
                         PushNotificationCore.receivedMessageLogic(activity, button.getMessage());
                 }
             });
+        }
+
+        public int px2dp(int px) {
+            float scale = getContext().getResources().getDisplayMetrics().density;
+            return (int) (px * scale + 0.5f);
         }
     }
 

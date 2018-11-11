@@ -11,6 +11,7 @@ import android.net.Uri;
 public class UrlHelper {
     public static void openUrl(Context context, String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(browserIntent);
     }
 }
