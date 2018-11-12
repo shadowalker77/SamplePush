@@ -64,6 +64,7 @@ public class NotificationUtils {
                 ImageHelper.downloadImage(imageUrl, new ImageHelper.OnBitmapDownloaded() {
                     @Override
                     public void onBitmapDownloaded(Bitmap bitmap) {
+                        playNotificationSound(context);
                         if (bitmap != null) {
                             showBigNotification(context, bitmap, mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
                         } else {
