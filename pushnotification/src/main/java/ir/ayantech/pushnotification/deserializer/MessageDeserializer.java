@@ -2,6 +2,7 @@ package ir.ayantech.pushnotification.deserializer;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -26,29 +27,32 @@ public class MessageDeserializer implements JsonDeserializer<Message> {
         String actionType = json.getAsJsonObject().get("actionType").getAsString();
         NotificationToShow notificationToShow = new Gson().fromJson(json.getAsJsonObject().get("notificationToShow"), NotificationToShow.class);
         PushNotificationAction action;
+        Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create();
+        Class<? extends PushNotificationAction> classOfAction;
         switch (actionType) {
             case "CustomizableDialog":
-                action = new Gson().fromJson(json.getAsJsonObject().get("action"), CustomizableDialogAction.class);
+                classOfAction = CustomizableDialogAction.class;
                 break;
             case "DownloadFile":
-                action = new Gson().fromJson(json.getAsJsonObject().get("action"), DownloadFileAction.class);
+                classOfAction = DownloadFileAction.class;
                 break;
             case "OpenUrl":
-                action = new Gson().fromJson(json.getAsJsonObject().get("action"), OpenUrlAction.class);
+                classOfAction = OpenUrlAction.class;
                 break;
             case "Share":
-                action = new Gson().fromJson(json.getAsJsonObject().get("action"), ShareAction.class);
+                classOfAction = ShareAction.class;
                 break;
             case "TargetedClass":
-                action = new Gson().fromJson(json.getAsJsonObject().get("action"), TargetedClassAction.class);
+                classOfAction = TargetedClassAction.class;
                 break;
             case "Custom":
-                action = new Gson().fromJson(json.getAsJsonObject().get("action"), CustomAction.class);
+                classOfAction = CustomAction.class;
                 break;
             default:
-                action = new Gson().fromJson(json.getAsJsonObject().get("action"), NoAction.class);
+                classOfAction = NoAction.class;
                 break;
         }
+        action = gson.fromJson(json.getAsJsonObject().get("action"), classOfAction);
         return new Message<>(action, actionType, notificationToShow);
     }
 }
