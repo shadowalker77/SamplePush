@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import java.util.Map;
 
 import ir.ayantech.pushnotification.R;
+import ir.ayantech.pushnotification.deserializer.MessageDeserializer;
 import ir.ayantech.pushnotification.helper.PreferencesManager;
 import ir.ayantech.pushnotification.networking.api.PNAPI;
 import ir.ayantech.pushnotification.networking.api.PNAPIs;
@@ -43,7 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void handleDataMessage(Map<String, String> arrayMap) {
         try {
             String body = arrayMap.get("message");
-            Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new Message.MessageDeserializer()).create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create();
             PushNotificationCore.receivedMessageLogic(getApplicationContext(), gson.fromJson(body, Message.class));
         } catch (Exception e) {
             e.printStackTrace();

@@ -52,42 +52,4 @@ public class Message<T extends PushNotificationAction> implements Serializable {
     public void setNotificationToShow(NotificationToShow notificationToShow) {
         this.notificationToShow = notificationToShow;
     }
-
-    public static class MessageDeserializer implements JsonDeserializer<Message> {
-        @Override
-        public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            String actionType = json.getAsJsonObject().get("actionType").getAsString();
-            NotificationToShow notificationToShow = new Gson().fromJson(json.getAsJsonObject().get("notificationToShow"), NotificationToShow.class);
-            switch (actionType) {
-                case "CustomizableDialog":
-                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), CustomizableDialogAction.class),
-                            actionType,
-                            notificationToShow);
-                case "DownloadFile":
-                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), DownloadFileAction.class),
-                            actionType,
-                            notificationToShow);
-                case "OpenUrl":
-                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), OpenUrlAction.class),
-                            actionType,
-                            notificationToShow);
-                case "Share":
-                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), ShareAction.class),
-                            actionType,
-                            notificationToShow);
-                case "TargetedClass":
-                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), TargetedClassAction.class),
-                            actionType,
-                            notificationToShow);
-                case "Custom":
-                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), CustomAction.class),
-                            actionType,
-                            notificationToShow);
-                default:
-                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), NoAction.class),
-                            actionType,
-                            notificationToShow);
-            }
-        }
-    }
 }
