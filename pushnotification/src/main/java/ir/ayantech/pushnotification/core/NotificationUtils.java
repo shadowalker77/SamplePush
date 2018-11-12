@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
@@ -33,7 +34,7 @@ public class NotificationUtils {
         showNotificationMessage(context, title, message, timeStamp, intent, null);
     }
 
-    public static void showNotificationMessage(Context context, final String title, final String message, final String timeStamp, Intent intent, String imageUrl) {
+    public static void showNotificationMessage(final Context context, final String title, final String message, final String timeStamp, Intent intent, String imageUrl) {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
@@ -60,14 +61,16 @@ public class NotificationUtils {
         if (!TextUtils.isEmpty(imageUrl)) {
 
             if (imageUrl != null && imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
-
-                Bitmap bitmap = ImageHelper.getBitmapFromURL(imageUrl);
-
-                if (bitmap != null) {
-                    showBigNotification(context, bitmap, mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
-                } else {
-                    showSmallNotification(mBuilder, context, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
-                }
+                ImageHelper.downloadImage(imageUrl, new ImageHelper.OnBitmapDownloaded() {
+                    @Override
+                    public void onBitmapDownloaded(Bitmap bitmap) {
+                        if (bitmap != null) {
+                            showBigNotification(context, bitmap, mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                        } else {
+                            showSmallNotification(mBuilder, context, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                        }
+                    }
+                });
             }
         } else {
             showSmallNotification(mBuilder, context, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
@@ -119,7 +122,15 @@ public class NotificationUtils {
         }
     }
 
-    private static void showBigNotification(Context context, Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
+    private static void showBigNotification(Context context,
+                                            Bitmap bitmap,
+                                            NotificationCompat.Builder mBuilder,
+                                            int icon,
+                                            String title,
+                                            String message,
+                                            String timeStamp,
+                                            PendingIntent resultPendingIntent,
+                                            Uri alarmSound) {
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(title);
         bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());

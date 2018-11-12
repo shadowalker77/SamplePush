@@ -54,7 +54,12 @@ public class CustomizableDialogActivity extends AppCompatActivity {
             return;
         if (wholeView.imageUrl.isEmpty())
             return;
-        new DownloadImage().execute(wholeView.imageUrl);
+        ImageHelper.downloadImage(wholeView.imageUrl, new ImageHelper.OnBitmapDownloaded() {
+            @Override
+            public void onBitmapDownloaded(Bitmap bitmap) {
+                ((ImageView) findViewById(R.id.bannerIv)).setImageBitmap(bitmap);
+            }
+        });
     }
 
     private WholeView deserializeIntent() {
@@ -187,19 +192,6 @@ public class CustomizableDialogActivity extends AppCompatActivity {
 
         public Message getMessage() {
             return message;
-        }
-    }
-
-    public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            return ImageHelper.getBitmapFromURL(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            ((ImageView) findViewById(R.id.bannerIv)).setImageBitmap(bitmap);
         }
     }
 }
