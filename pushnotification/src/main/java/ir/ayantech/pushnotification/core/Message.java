@@ -1,11 +1,10 @@
 package ir.ayantech.pushnotification.core;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -13,6 +12,7 @@ import java.lang.reflect.Type;
 import ir.ayantech.pushnotification.action.CustomAction;
 import ir.ayantech.pushnotification.action.CustomizableDialogAction;
 import ir.ayantech.pushnotification.action.DownloadFileAction;
+import ir.ayantech.pushnotification.action.NoAction;
 import ir.ayantech.pushnotification.action.OpenUrlAction;
 import ir.ayantech.pushnotification.action.PushNotificationAction;
 import ir.ayantech.pushnotification.action.ShareAction;
@@ -56,40 +56,38 @@ public class Message<T extends PushNotificationAction> implements Serializable {
     public static class MessageDeserializer implements JsonDeserializer<Message> {
         @Override
         public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Message message = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create().fromJson(json.toString(), new TypeToken<Message<CustomAction>>() {
-            }.getType());
-            if (message.getAction() != null) {
-                Type actionType = null;
-                switch (message.getActionType()) {
-                    case "CustomizableDialog":
-                        actionType = new TypeToken<Message<CustomizableDialogAction>>() {
-                        }.getType();
-                        break;
-                    case "DownloadFile":
-                        actionType = new TypeToken<Message<DownloadFileAction>>() {
-                        }.getType();
-                        break;
-                    case "OpenUrl":
-                        actionType = new TypeToken<Message<OpenUrlAction>>() {
-                        }.getType();
-                        break;
-                    case "Share":
-                        actionType = new TypeToken<Message<ShareAction>>() {
-                        }.getType();
-                        break;
-                    case "TargetedClass":
-                        actionType = new TypeToken<Message<TargetedClassAction>>() {
-                        }.getType();
-                        break;
-                    case "Custom":
-                        actionType = new TypeToken<Message<CustomAction>>() {
-                        }.getType();
-                        break;
-                }
-                if (actionType != null)
-                    message = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create().fromJson(json.toString(), actionType);
+            String actionType = json.getAsJsonObject().get("actionType").getAsString();
+            NotificationToShow notificationToShow = new Gson().fromJson(json.getAsJsonObject().get("notificationToShow"), NotificationToShow.class);
+            switch (actionType) {
+                case "CustomizableDialog":
+                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), CustomizableDialogAction.class),
+                            actionType,
+                            notificationToShow);
+                case "DownloadFile":
+                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), DownloadFileAction.class),
+                            actionType,
+                            notificationToShow);
+                case "OpenUrl":
+                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), OpenUrlAction.class),
+                            actionType,
+                            notificationToShow);
+                case "Share":
+                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), ShareAction.class),
+                            actionType,
+                            notificationToShow);
+                case "TargetedClass":
+                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), TargetedClassAction.class),
+                            actionType,
+                            notificationToShow);
+                case "Custom":
+                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), CustomAction.class),
+                            actionType,
+                            notificationToShow);
+                default:
+                    return new Message<>(new Gson().fromJson(json.getAsJsonObject().get("action"), NoAction.class),
+                            actionType,
+                            notificationToShow);
             }
-            return message;
         }
     }
 }
