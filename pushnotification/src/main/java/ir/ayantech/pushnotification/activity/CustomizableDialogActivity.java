@@ -3,6 +3,8 @@ package ir.ayantech.pushnotification.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -27,12 +29,14 @@ import ir.ayantech.pushnotification.helper.ImageHelper;
 
 public class CustomizableDialogActivity extends AppCompatActivity {
 
+    private WholeView wholeView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_customizable);
         setFinishOnTouchOutside(false);
-        final WholeView wholeView = deserializeIntent();
+        wholeView = deserializeIntent();
         if (wholeView == null) {
             finish();
             return;
@@ -50,12 +54,7 @@ public class CustomizableDialogActivity extends AppCompatActivity {
             return;
         if (wholeView.imageUrl.isEmpty())
             return;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ((ImageView) findViewById(R.id.bannerIv)).setImageBitmap(ImageHelper.getBitmapFromURL(wholeView.imageUrl));
-            }
-        }, 100);
+        new DownloadImage().execute(wholeView.imageUrl);
     }
 
     private WholeView deserializeIntent() {
@@ -188,6 +187,19 @@ public class CustomizableDialogActivity extends AppCompatActivity {
 
         public Message getMessage() {
             return message;
+        }
+    }
+
+    public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            return ImageHelper.getBitmapFromURL(strings[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            ((ImageView) findViewById(R.id.bannerIv)).setImageBitmap(bitmap);
         }
     }
 }
