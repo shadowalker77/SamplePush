@@ -133,8 +133,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             @Override
             public void onFail(PNAPI PNAPI, String error, boolean canTry) {
-//                Log.e("Error", error);
-                Log.e("AyanPush", "FCM token successfully reported to the server. Did you correctly set \"properties.xml\" file?");
+                Log.e("Error", error);
+                Log.e("AyanPush", "FCM token not reported to the server. Did you correctly set \"properties.xml\" file?");
             }
         };
     }
