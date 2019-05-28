@@ -22,12 +22,19 @@ import ir.ayantech.pushnotification.core.Message;
 import ir.ayantech.pushnotification.core.NotificationToShow;
 
 public class MessageDeserializer implements JsonDeserializer<Message> {
+
+    private String messageId;
+
+    public MessageDeserializer(String messageId) {
+        this.messageId = messageId;
+    }
+
     @Override
     public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String actionType = json.getAsJsonObject().get("actionType").getAsString();
-        NotificationToShow notificationToShow = new Gson().fromJson(json.getAsJsonObject().get("notificationToShow"), NotificationToShow.class);
+        Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer(messageId)).create();
+        NotificationToShow notificationToShow = gson.fromJson(json.getAsJsonObject().get("notificationToShow"), NotificationToShow.class);
         PushNotificationAction action;
-        Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create();
         Class<? extends PushNotificationAction> classOfAction;
         switch (actionType) {
             case "CustomizableDialog":
@@ -53,6 +60,6 @@ public class MessageDeserializer implements JsonDeserializer<Message> {
                 break;
         }
         action = gson.fromJson(json.getAsJsonObject().get("action"), classOfAction);
-        return new Message<>(action, actionType, notificationToShow);
+        return new Message<>(action, actionType, notificationToShow, messageId);
     }
 }

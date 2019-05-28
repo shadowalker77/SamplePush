@@ -19,4 +19,7 @@ public interface PNInterface {
 
     @POST("UpdateDeviceToken")
     Call<PNResponseModel> updateDeviceToken(@Body PNRequestModel requestModel);
+
+    @POST("ReportDeviceReceivedNotificationStatus")
+    Call<PNResponseModel> reportDeviceReceivedNotificationStatus(@Body PNRequestModel requestModel);
 }

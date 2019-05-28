@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import ir.ayantech.pushnotification.core.Message;
+import ir.ayantech.pushnotification.core.PushNotificationCore;
+import ir.ayantech.pushnotification.networking.api.PNAPIs;
 
 public class IncomeMessageActivity extends AppCompatActivity {
 
@@ -14,6 +16,7 @@ public class IncomeMessageActivity extends AppCompatActivity {
         Message message = (Message) getIntent().getSerializableExtra("messageTag");
         message.getAction().setContext(this);
         message.getAction().doAction();
+        PushNotificationCore.reportMessageStatus(message.getMessageId(), "clicked");
         finish();
     }
 }

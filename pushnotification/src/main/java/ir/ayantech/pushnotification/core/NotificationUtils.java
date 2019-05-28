@@ -12,14 +12,17 @@ import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import java.util.List;
+
 import ir.ayantech.pushnotification.R;
+import ir.ayantech.pushnotification.activity.CustomizableDialogActivity;
 import ir.ayantech.pushnotification.helper.ImageHelper;
 
 public class NotificationUtils {
@@ -30,11 +33,17 @@ public class NotificationUtils {
 //        this.mContext = mContext;
 //    }
 
-    public static void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
-        showNotificationMessage(context, title, message, timeStamp, intent, null);
-    }
+//    public static void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
+//        showNotificationMessage(context, title, message, timeStamp, intent, null);
+//    }
 
-    public static void showNotificationMessage(final Context context, final String title, final String message, final String timeStamp, Intent intent, String imageUrl) {
+    public static void showNotificationMessage(final Context context,
+                                               final String title,
+                                               final String message,
+                                               final String timeStamp,
+                                               Intent intent,
+                                               String imageUrl,
+                                               final List<CustomizableDialogActivity.Button> buttonList) {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
@@ -66,15 +75,15 @@ public class NotificationUtils {
                     public void onBitmapDownloaded(Bitmap bitmap) {
                         playNotificationSound(context);
                         if (bitmap != null) {
-                            showBigNotification(context, bitmap, mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                            showBigNotification(context, bitmap, mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound, buttonList);
                         } else {
-                            showSmallNotification(mBuilder, context, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                            showSmallNotification(mBuilder, context, icon, title, message, timeStamp, resultPendingIntent, alarmSound, buttonList);
                         }
                     }
                 });
             }
         } else {
-            showSmallNotification(mBuilder, context, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+            showSmallNotification(mBuilder, context, icon, title, message, timeStamp, resultPendingIntent, alarmSound, buttonList);
             playNotificationSound(context);
         }
     }
@@ -87,7 +96,8 @@ public class NotificationUtils {
                                               String message,
                                               String timeStamp,
                                               PendingIntent resultPendingIntent,
-                                              Uri alarmSound) {
+                                              Uri alarmSound,
+                                              List<CustomizableDialogActivity.Button> buttonList) {
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
@@ -95,7 +105,7 @@ public class NotificationUtils {
 
 
         Notification notification;
-        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+        mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
                 .setAutoCancel(true)
                 .setContentTitle(title)
                 .setContentIntent(resultPendingIntent)
@@ -104,8 +114,15 @@ public class NotificationUtils {
 //                .setWhen(getTimeMilliSec(timeStamp))
                 .setSmallIcon(R.drawable.pushIcon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), icon))
-                .setContentText(message)
-                .build();
+                .setContentText(message);
+        if (buttonList != null)
+            if (!buttonList.isEmpty()) {
+                for (CustomizableDialogActivity.Button b : buttonList) {
+                    mBuilder.addAction(0, b.getText(), PushNotificationCore.getPendingIntentByMessage(context, b.getMessage()));
+                }
+                mBuilder.setColor(ContextCompat.getColor(context, R.color.colorAccent));
+            }
+        notification = mBuilder.build();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         /////////////////
@@ -131,13 +148,14 @@ public class NotificationUtils {
                                             String message,
                                             String timeStamp,
                                             PendingIntent resultPendingIntent,
-                                            Uri alarmSound) {
+                                            Uri alarmSound,
+                                            List<CustomizableDialogActivity.Button> buttonList) {
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(title);
         bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
         bigPictureStyle.bigPicture(bitmap);
         Notification notification;
-        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+        mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
                 .setAutoCancel(true)
                 .setContentTitle(title)
                 .setContentIntent(resultPendingIntent)
@@ -146,8 +164,16 @@ public class NotificationUtils {
 //                .setWhen(getTimeMilliSec(timeStamp))
                 .setSmallIcon(R.drawable.pushIcon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), icon))
-                .setContentText(message)
-                .build();
+                .setContentText(message);
+
+        if (buttonList != null)
+            if (!buttonList.isEmpty()) {
+                for (CustomizableDialogActivity.Button b : buttonList) {
+                    mBuilder.addAction(0, b.getText(), PushNotificationCore.getPendingIntentByMessage(context, b.getMessage()));
+                }
+                mBuilder.setColor(ContextCompat.getColor(context, R.color.colorAccent));
+            }
+        notification = mBuilder.build();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         /////////////////

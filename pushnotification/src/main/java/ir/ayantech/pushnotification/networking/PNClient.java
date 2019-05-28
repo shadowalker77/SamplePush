@@ -15,7 +15,7 @@ public class PNClient {
 
     private static Retrofit retrofit = null;
 
-    private static final String PUSH_NOTIFICATION_BASE_URL = "http://pushnotification.infra.ayantech.ir/WebServices/App.svc/";
+    private static final String PUSH_NOTIFICATION_BASE_URL = "https://pushnotification.infra.ayantech.ir/WebServices/App.svc/";
 
     private static OkHttpClient okHttpClient;
 

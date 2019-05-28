@@ -33,18 +33,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage == null)
             return;
+        PushNotificationCore.reportMessageStatus(remoteMessage.getMessageId(), "delivered");
         if (remoteMessage.getData().size() > 0) {
             try {
-                handleDataMessage(remoteMessage.getData());
+                handleDataMessage(remoteMessage.getData(), remoteMessage.getMessageId());
             } catch (Exception e) {
             }
         }
     }
 
-    private void handleDataMessage(Map<String, String> arrayMap) {
+    private void handleDataMessage(Map<String, String> arrayMap, String messageId) {
         try {
             String body = arrayMap.get("message");
-            Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer(messageId)).create();
             PushNotificationCore.receivedMessageLogic(getApplicationContext(), gson.fromJson(body, Message.class));
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +57,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onNewToken(s);
         Log.d("newToken", s);
         PreferencesManager.saveToSharedPreferences(SERVER_NOTIFIED_TOKEN, false);
-        PNAPIs.initialize();
         if (!s.isEmpty())
             newDevice(getApplicationContext(), s);
     }
@@ -75,7 +75,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static <T extends ExtraInfo> void sendRegistrationToServer(Context context, final String token, T extraInfo) {
         if (token.isEmpty())
             return;
-        PNAPIs.reportNewDevice.callApi(getResponseStatus(),
+        PNAPIs.getInstance().reportNewDevice.callApi(getResponseStatus(),
                 new ReportNewDevice.ReportNewDeviceInputModel(context.getResources().getString(R.string.applicationName),
                         context.getResources().getString(R.string.applicationType),
                         getApplicationVersion(context),
@@ -106,7 +106,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static void reportUserMobileNumber(String mobileNumber) {
         if (PushNotificationUser.getPushNotificationToken().isEmpty())
             return;
-        PNAPIs.reportDeviceMobileNumber.callApi(new PNResponseStatus() {
+        PNAPIs.getInstance().reportDeviceMobileNumber.callApi(new PNResponseStatus() {
             @Override
             public void onSuccess(PNAPI PNAPI, String message, @Nullable PNResponseModel responseModel) {
                 PreferencesManager.saveToSharedPreferences(SERVER_NOTIFIED_MOBILE, true);

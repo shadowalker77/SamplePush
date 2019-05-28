@@ -8,11 +8,13 @@ public class Message<T extends PushNotificationAction> implements Serializable {
     private T action;
     private String actionType;
     private NotificationToShow notificationToShow;
+    private String messageId;
 
-    public Message(T action, String actionType, NotificationToShow notificationToShow) {
+    public Message(T action, String actionType, NotificationToShow notificationToShow, String messageId) {
         this.action = action;
         this.actionType = actionType;
         this.notificationToShow = notificationToShow;
+        this.messageId = messageId;
     }
 
     public String getActionType() {
@@ -29,6 +31,14 @@ public class Message<T extends PushNotificationAction> implements Serializable {
 
     public void setAction(T action) {
         this.action = action;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public NotificationToShow getNotificationToShow() {
