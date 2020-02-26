@@ -9,12 +9,16 @@ public class NotificationToShow implements Serializable {
     private String title;
     private String message;
     private String imageUrl;
+    private String iconUrl;
+    private boolean useCustomView;
     private List<CustomizableDialogActivity.Button> buttons;
 
-    public NotificationToShow(String title, String message, String imageUrl, List<CustomizableDialogActivity.Button> buttons) {
+    public NotificationToShow(String title, String message, String imageUrl, String iconUrl, boolean useCustomView, List<CustomizableDialogActivity.Button> buttons) {
         this.title = title;
         this.message = message;
         this.imageUrl = imageUrl;
+        this.iconUrl = iconUrl;
+        this.useCustomView = useCustomView;
         this.buttons = buttons;
     }
 
@@ -32,5 +36,13 @@ public class NotificationToShow implements Serializable {
 
     public List<CustomizableDialogActivity.Button> getButtons() {
         return buttons;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public boolean isUseCustomView() {
+        return useCustomView;
     }
 }

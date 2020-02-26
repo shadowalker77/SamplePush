@@ -13,11 +13,12 @@
         android:textSize="@dimen/text_x_large"
         android:textStyle="bold" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:id="@+id/contentSv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleTv">
+        android:layout_below="@+id/titleTv"
+        android:layout_marginTop="@dimen/main_padding">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,15 +29,16 @@
                 android:id="@+id/bannerIv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/main_padding"
                 android:adjustViewBounds="true" />
 
             <TextView
                 android:id="@+id/messageTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_below="@+id/bannerIv"
-                android:layout_marginTop="@dimen/main_padding"
+                android:layout_alignParentRight="true"
                 android:autoLink="web"
                 android:textColor="@color/black" />
         </RelativeLayout>
@@ -47,5 +49,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/contentSv"
-        android:layout_marginTop="@dimen/main_padding"/>
+        android:layout_marginTop="@dimen/main_padding"
+        android:orientation="horizontal" />
 </RelativeLayout>

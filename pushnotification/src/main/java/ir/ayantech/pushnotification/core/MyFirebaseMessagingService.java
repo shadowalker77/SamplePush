@@ -2,7 +2,7 @@ package ir.ayantech.pushnotification.core;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 

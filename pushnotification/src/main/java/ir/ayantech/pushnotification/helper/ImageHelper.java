@@ -3,14 +3,13 @@ package ir.ayantech.pushnotification.helper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.widget.ImageView;
+import android.util.Base64;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import ir.ayantech.pushnotification.R;
 
 public class ImageHelper {
 
@@ -50,6 +49,13 @@ public class ImageHelper {
             super.onPostExecute(bitmap);
             onBitmapDownloaded.onBitmapDownloaded(bitmap);
         }
+    }
+
+    public static Bitmap convertBase64ToBitmap(String base64) {
+        return BitmapFactory.decodeStream(new ByteArrayInputStream(
+                        Base64.decode(base64, Base64.DEFAULT)
+                )
+        );
     }
 
     public interface OnBitmapDownloaded {

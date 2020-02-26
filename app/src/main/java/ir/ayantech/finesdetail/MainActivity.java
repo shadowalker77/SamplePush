@@ -2,11 +2,12 @@ package ir.ayantech.finesdetail;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import java.util.ArrayList;
 
+import ir.ayantech.pushnotification.action.CustomizableDialogAction;
 import ir.ayantech.pushnotification.action.OpenUrlAction;
 import ir.ayantech.pushnotification.activity.CustomizableDialogActivity;
 import ir.ayantech.pushnotification.core.Message;
@@ -27,16 +28,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ArrayList<CustomizableDialogActivity.Button> buttons = new ArrayList<>();
-                buttons.add(new CustomizableDialogActivity.Button("but1", new Message(new OpenUrlAction("https://www.google.com"), "OpenUrl", null, "1")));
-                buttons.add(new CustomizableDialogActivity.Button("but2", new Message(new OpenUrlAction("https://www.google.com"), "OpenUrl", null, "1")));
-                buttons.add(new CustomizableDialogActivity.Button("but3", new Message(new OpenUrlAction("https://www.google.com"), "OpenUrl", null, "1")));
+                buttons.add(new CustomizableDialogActivity.Button("دکمه ۱", new Message(new OpenUrlAction("https://www.google.com"), "OpenUrl", null, "1")));
+                buttons.add(new CustomizableDialogActivity.Button("دکمه ۲", new Message(
+                        new CustomizableDialogAction("عنوان", "پیام اینه", "", null),
+                        "OpenUrl", null, "1")));
+//                buttons.add(new CustomizableDialogActivity.Button("but3", new Message(new OpenUrlAction("https://www.google.com"), "OpenUrl", null, "1")));
                 NotificationUtils.showNotificationMessage(MainActivity.this,
-                        "Test title",
-                        "Test message bodu lorem ipsum",
+                        "عنوان تستی",
+                        "یک پیام طولانی جهت تست چند خطی شدن نوتیفیکیشن برای این پیام در نظر گرفته شده است. این پیام باید امکان مشاهده کامل را داشته باشد. لذا کامل چک شود.",
                         "0",
                         new Intent(),
-                        null,
-                        buttons);
+                        "https://static.farakav.com/files/pictures/thumb/01476557.jpg",
+//                        "",
+                        buttons,
+                        "https://www.pinclipart.com/picdir/big/158-1587103_report-icons-test-icon-clipart.png",
+//                        "",
+                        true);
             }
         });
     }

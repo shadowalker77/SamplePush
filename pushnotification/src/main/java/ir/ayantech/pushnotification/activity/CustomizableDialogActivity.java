@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -24,6 +24,7 @@ import java.util.List;
 import ir.ayantech.pushnotification.R;
 import ir.ayantech.pushnotification.action.CustomizableDialogAction;
 import ir.ayantech.pushnotification.core.Message;
+import ir.ayantech.pushnotification.core.NotificationUtils;
 import ir.ayantech.pushnotification.core.PushNotificationCore;
 import ir.ayantech.pushnotification.helper.ImageHelper;
 
@@ -36,27 +37,35 @@ public class CustomizableDialogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_customizable);
         setFinishOnTouchOutside(false);
+        NotificationUtils.playNotificationSound(this);
         wholeView = deserializeIntent();
         if (wholeView == null) {
             finish();
             return;
         }
         List<ButtonView> buttonViews = new ArrayList<>();
-        for (Button button : wholeView.buttons) {
-            buttonViews.add(new ButtonView(this, button));
+        if (wholeView.buttons != null)
+            for (Button button : wholeView.buttons) {
+                buttonViews.add(new ButtonView(this, button));
+            }
+        else {
+            findViewById(R.id.buttonsLl).setVisibility(View.GONE);
         }
         ((TextView) findViewById(R.id.titleTv)).setText(wholeView.title);
         ((TextView) findViewById(R.id.messageTv)).setText(wholeView.message);
         for (ButtonView buttonView : buttonViews) {
             ((LinearLayout) findViewById(R.id.buttonsLl)).addView(buttonView);
         }
-        if (wholeView.imageUrl == null)
+        if (wholeView.imageUrl == null) {
             return;
-        if (wholeView.imageUrl.isEmpty())
+        }
+        if (wholeView.imageUrl.isEmpty()) {
             return;
+        }
         ImageHelper.downloadImage(wholeView.imageUrl, new ImageHelper.OnBitmapDownloaded() {
             @Override
             public void onBitmapDownloaded(Bitmap bitmap) {
+                findViewById(R.id.bannerIv).setVisibility(View.VISIBLE);
                 ((ImageView) findViewById(R.id.bannerIv)).setImageBitmap(bitmap);
             }
         });

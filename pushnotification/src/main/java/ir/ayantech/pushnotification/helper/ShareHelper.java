@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.v4.app.ShareCompat;
+import androidx.core.app.ShareCompat;
 
 /**
  * Created by Administrator on 7/17/2017.

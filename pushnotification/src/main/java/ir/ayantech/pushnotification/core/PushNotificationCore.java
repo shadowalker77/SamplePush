@@ -3,7 +3,7 @@ package ir.ayantech.pushnotification.core;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.GsonBuilder;
@@ -56,9 +56,10 @@ public class PushNotificationCore {
     }
 
     private static void showNotificationMessageWithBigImage(Context context, String title, String message, String timeStamp, Intent intent, String imageUrl,
-                                                            List<CustomizableDialogActivity.Button> buttonList) {
+                                                            List<CustomizableDialogActivity.Button> buttonList,
+                                                            final String bigIconUrl, boolean isCustom) {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        NotificationUtils.showNotificationMessage(context, title, message, timeStamp, intent, imageUrl, buttonList);
+        NotificationUtils.showNotificationMessage(context, title, message, timeStamp, intent, imageUrl, buttonList, bigIconUrl, isCustom);
     }
 
     public static Message convertStringToMessage(String data) {
@@ -111,7 +112,9 @@ public class PushNotificationCore {
                     "0",
                     new Intent(),
                     message.getNotificationToShow().getImageUrl(),
-                    message.getNotificationToShow().getButtons());
+                    message.getNotificationToShow().getButtons(),
+                    message.getNotificationToShow().getIconUrl(),
+                    message.getNotificationToShow().isUseCustomView());
         }
         if (message.getNotificationToShow() != null && message.getAction() != null) {
             showNotificationMessageWithBigImage(context,
@@ -120,7 +123,9 @@ public class PushNotificationCore {
                     "0",
                     getIntentByMessage(context, message),
                     message.getNotificationToShow().getImageUrl(),
-                    message.getNotificationToShow().getButtons());
+                    message.getNotificationToShow().getButtons(),
+                    message.getNotificationToShow().getIconUrl(),
+                    message.getNotificationToShow().isUseCustomView());
         }
     }
 

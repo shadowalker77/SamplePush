@@ -1,6 +1,6 @@
 package ir.ayantech.pushnotification.networking.api;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import ir.ayantech.pushnotification.networking.model.PNResponseModel;
 
